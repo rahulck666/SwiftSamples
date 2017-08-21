@@ -1,0 +1,26 @@
+PODS:
+  - Alamofire (4.5.0)
+  - DatePickerDialog (1.1.7)
+  - ImagePicker (2.1.1)
+  - Realm (2.9.1):
+    - Realm/Headers (= 2.9.1)
+  - Realm/Headers (2.9.1)
+  - RealmSwift (2.9.1):
+    - Realm (= 2.9.1)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.0)
+  - DatePickerDialog
+  - ImagePicker
+  - RealmSwift
+
+SPEC CHECKSUMS:
+  Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
+  DatePickerDialog: bd5e7e92e4da2c6a8966b28d5f5d8f335d6c2c63
+  ImagePicker: fe4c699abb56ff03994fa98d8b02e3883ee118be
+  Realm: f91fb43bd474c4f731a116ebf7392c75dd015920
+  RealmSwift: 207f12a4a36b696c5183c60a1c06d70234a23e56
+
+PODFILE CHECKSUM: 9b965563e1aae4d6f6f5d0a69399370337a69288
+
+COCOAPODS: 1.1.0.rc.2
