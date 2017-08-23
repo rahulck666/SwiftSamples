@@ -15,6 +15,11 @@ enum ContactDetailViewMode {
     case view
     case edit
 }
+protocol ContactDetailViewControllerDelegate:NSObjectProtocol {
+    func didUserChange(contact:Contact)
+    func didUserAdd(contact:Contact)
+    
+}
 class ContactDetailViewController: UIViewController {
     
     @IBOutlet weak var birthDateSelectionbutton: UIButton!
@@ -30,6 +35,7 @@ class ContactDetailViewController: UIViewController {
     var viewMode:ContactDetailViewMode = .edit
     var contact = Contact()
     var selectedDate:Date?
+    weak var delegate:ContactDetailViewControllerDelegate?
     
     class func instantiateViewController()-> ContactDetailViewController {
         let viewController = UIStoryboard.main().instantiateViewController(withIdentifier: ContactDetailViewController.className) as! ContactDetailViewController
@@ -144,9 +150,9 @@ class ContactDetailViewController: UIViewController {
         imagePickerController.imageLimit = 1
         present(imagePickerController, animated: true, completion: nil)
     }
-
+    
     // MARK:- Validation Related methods
-
+    
     func validateUserField() -> Bool {
         
         var isValid = true
@@ -162,12 +168,12 @@ class ContactDetailViewController: UIViewController {
             lastNameTextField.becomeFirstResponder()
             isValid = false
         }
-        else if (mobileTextField.text?.isEmpty ?? true) == true {
+        else if !Utility.isValid(phoneNumber: mobileTextField.text) {
             message = MessageConstants.invalidMobileMessage
             mobileTextField.becomeFirstResponder()
             isValid = false
         }
-        else if !Utility.isValidEmailAddress(emailAddressString: emailTextField.text) {
+        else if !Utility.isValid(emailAddress: emailTextField.text) {
             message = MessageConstants.invalidEmailMessage
             emailTextField.becomeFirstResponder()
             isValid = false
@@ -222,6 +228,7 @@ extension ContactDetailViewController:NavigationBarViewDelegate {
             showAlert(with: MessageConstants.success, message: MessageConstants.savedSuccessfully, okAction: {
                 _ = self.navigationController?.popViewController(animated: true)
             })
+            self.delegate?.didUserChange(contact: contact)
             break
         case .enter:
             contact.firstName = firstNameTextField.text ?? ""
@@ -235,6 +242,8 @@ extension ContactDetailViewController:NavigationBarViewDelegate {
             showAlert(with: MessageConstants.success, message: MessageConstants.savedSuccessfully, okAction: {
                 self.dismiss(animated: true, completion: nil)
             })
+            self.delegate?.didUserAdd(contact: contact)
+            
         case .view:
             viewMode = .edit
             updateUIFor(viewMode: .edit)
