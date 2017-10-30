@@ -22,8 +22,6 @@ class ContactListingViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setUpDataSource()
-        tableView.reloadData()
         showNoDataMessageIfNeeded()
         
     }
@@ -52,7 +50,7 @@ class ContactListingViewController: UIViewController {
     // MARK:- UI updates methods
     
     func showNoDataMessageIfNeeded()  {
-        if contacts.count == 0 {
+        if contacts.isEmpty {
             noDataLabel.text = LocalizeStringConstants.noDataMessage
         }
         else {
@@ -67,6 +65,7 @@ class ContactListingViewController: UIViewController {
             let detailController = ContactDetailViewController.instantiateViewController()
             detailController.viewMode = .view
             detailController.contact = contact
+            detailController.delegate = self
             self.navigationController?.pushViewController(detailController, animated: true)
         }
         let cancelAction = UIAlertAction(title: LocalizeStringConstants.cancel, style: .cancel) { action -> Void in
@@ -164,10 +163,30 @@ extension ContactListingViewController:NavigationBarViewDelegate {
     func didTapNavigationRightButton(sender:Any) {
         
         let detailController = ContactDetailViewController.instantiateViewController()
+        detailController.delegate = self
         detailController.viewMode = .enter
         self.present(detailController, animated: true, completion: nil)
-
+        
     }
     
 }
+// MARK:- ContactDetailViewControllerDelegate
+
+extension ContactListingViewController:ContactDetailViewControllerDelegate {
+    
+    func didUserChange(contact:Contact) {
+        
+        if let indexToUpdate = contacts.index(of:contact) {
+            let indexPath = IndexPath(item: indexToUpdate, section: 0)
+            if tableView.cellForRow(at:indexPath) != nil {
+                tableView.reloadRows(at: [indexPath], with: .fade)
+            }
+        }
+    }
+    func didUserAdd(contact:Contact) {
+        setUpDataSource()
+        tableView.reloadData()
+    }
+}
+
 

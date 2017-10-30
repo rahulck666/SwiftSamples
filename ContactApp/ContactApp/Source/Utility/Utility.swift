@@ -9,9 +9,9 @@
 import Foundation
 struct Utility {
     
-    static func isValidEmailAddress(emailAddressString: String?) -> Bool {
+    static func isValid(emailAddress: String?) -> Bool {
         
-        guard let emailAddressString = emailAddressString else {
+        guard let emailAddressString = emailAddress else {
             return false
         }
         var returnValue = true
@@ -33,5 +33,15 @@ struct Utility {
         }
         
         return  returnValue
+    }
+    
+    static func  isValid(phoneNumber: String?) -> Bool {
+        guard let phoneNumber = phoneNumber else {
+            return false
+        }
+        let charcterSet  = NSCharacterSet(charactersIn: "+0123456789").inverted
+        let inputString = phoneNumber.components(separatedBy: charcterSet)
+        let filtered = inputString.joined(separator: "")
+        return  phoneNumber == filtered
     }
 }
